@@ -1,6 +1,7 @@
 var Router = require('Router'),
     Wave = require('Wave'),
-    Matrix = require('Matrix');
+    Matrix = require('Matrix'),
+    Path = require('Path');
 
 /**
  * @param {HTMLCanvasElement} canvas
@@ -69,7 +70,11 @@ Maze.prototype = {
             }
         }
 
-        return new Matrix(result);
+        var matrix = new Matrix(result);
+        matrix.width = imageData.width;
+        matrix.height = imageData.height;
+
+        return matrix;
     },
 
     /**
@@ -79,20 +84,41 @@ Maze.prototype = {
         this.startPoint = start;
 
         var route = new Router(),
-            wave = new Wave(this.matrix);
+            wave = new Wave(this.matrix),
+            winner;
 
         wave.geometry = [start];
+        wave.path = new Path();
+        wave.path.addPoint(start);
+
         route.setWave(wave);
 
-        /*for (var i = 0; i < 100000; i++) {
-            route.step();
-        }*/
+        for (var i = 0; i < 100000; i++) {
+            winner = route.step();
+            if (winner) {
+                var points = winner.path.getPoints();
+                this.drawPath(points);
+                break;
+            }
+        }
         /*setInterval(function () {
             route.step();
         }, 50);*/
         /*window.addEventListener('click', function () {
             route.step();
         });*/
+    },
+
+
+    drawPath: function (points) {
+        ctx.beginPath();
+        ctx.strokeStyle = 'red';
+        for (var i = 0; i < points.length; i++) {
+            var point = points[i];
+            ctx.lineTo(point.x, point.y);
+            //window.ctx.fillRect(point.x, point.y, 1, 1);
+        }
+        ctx.stroke();
     }
 };
 

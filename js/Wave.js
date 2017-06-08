@@ -26,6 +26,8 @@ Wave.prototype = {
      */
     parent: null,
 
+    path: null,
+
     /**
      * продвижение волны на одну единицу
      * @returns {Wave[]}
@@ -42,6 +44,9 @@ Wave.prototype = {
             top = left = right = bottom = undefined;
             matrix.setPoint(point, 2);
 
+            if (point.x == 1 || point.x == matrix.width - 1 || point.y == 1 || point.y == matrix.height - 1) {
+                return true;
+            }
 
             if (matrix.getItem(point.x, point.y - 1) === 0) {
                 top = new Point(point.x, point.y - 1);
@@ -122,8 +127,7 @@ Wave.prototype = {
             newWave;
 
         for (i = 0; i < sectors.length; i++) {
-            newWave = new Wave(matrix);
-            newWave.geometry = sectors[i].geometry;
+            newWave = this.create(sectors[i].geometry);
             result.push(newWave);
         }
 
@@ -169,7 +173,6 @@ Wave.prototype = {
 
                 if (firstPoint && lastPoint && firstPoint.getDistance(lastPoint) == 1) {
                     currentSector.merge(firstSector);
-                    console.log('merge');
                 } else {
                     sectors.push(currentSector);
                 }
@@ -179,6 +182,28 @@ Wave.prototype = {
         }
 
         return sectors;
+    },
+
+    getCenter: function () {
+        var length = this.geometry.length;
+        if (!length) {
+            return null;
+        }
+
+        var centerKey = Math.floor(length / 2);
+        return this.geometry[centerKey];
+    },
+
+    create: function (geometry) {
+        var wave = new Wave(this.matrix);
+        wave.geometry = geometry;
+        wave.path = this.path;
+        return wave;
+    },
+
+    savePathPoint: function () {
+        var center = this.getCenter();
+        this.path.addPoint(center);
     }
 };
 

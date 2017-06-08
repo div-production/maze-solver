@@ -1,9 +1,14 @@
+var Point = require('Point');
+
 /**
  * @param {Array[]} data
  * @constructor
  */
 function Matrix(data) {
     this.data = data;
+
+    var lastRow = data[data.length - 1];
+    this.max = lastRow[lastRow.length - 1];
 }
 
 Matrix.prototype = {
@@ -11,6 +16,10 @@ Matrix.prototype = {
      * @type {Array[]}
      */
     data: [],
+
+    width: null,
+
+    height: null,
 
     /**
      * получение числа элементов матрицы

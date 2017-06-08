@@ -1,8 +1,10 @@
+var Path = require('Path');
+
 /**
  * @constructor
  */
 function Router() {
-    this.path = [];
+    this.path = new Path();
     this.waves = [];
 }
 
@@ -36,17 +38,37 @@ Router.prototype = {
             return;
         }
 
-        var newWaves = [];
+        var newWaves = [],
+            wave,
+            childWaves;
 
-        window.ctx.fillStyle = 'rgba(255,255,0,1)';
         for (var i = 0; i < this.waves.length; i++) {
-            newWaves = newWaves.concat(this.waves[i].propagate());
-            for (j = 0; j < this.waves[i].geometry.length; j++) {
-                var point = this.waves[i].geometry[j];
-                window.ctx.fillRect(point.x, point.y, 1, 1);
+
+            wave = this.waves[i];
+            childWaves = wave.propagate();
+
+            if (childWaves === true) {
+                return wave;
+            }
+            if (childWaves.length > 1) {
+                for (j = 0; j < childWaves.length; j++) {
+                    childWaves[j].path = new Path(childWaves[j].path);
+                }
+            }
+            newWaves = newWaves.concat(childWaves);
+            for (j = 0; j < wave.geometry.length; j++) {
+                var point = wave.geometry[j];
+
+                //window.ctx.fillRect(point.x, point.y, 1, 1);
+            }
+
+            if (this.counter % 10 == 0) {
+                wave.savePathPoint();
             }
         }
         this.waves = newWaves;
+
+        this.counter++;
 
         /*window.ctx.fillStyle = 'rgba(255,255,0,1)';
         for (i = 0; i < this.wave.geometry.length; i++) {
