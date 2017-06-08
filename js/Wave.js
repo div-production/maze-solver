@@ -117,33 +117,41 @@ Wave.prototype = {
             }
         }
 
-        var newWave = new Wave(matrix);
-        newWave.geometry = newPoints;
+        var sectors = this.splitGeometry(newPoints),
+            result = [],
+            newWave;
 
-        return [newWave];
+        for (i = 0; i < sectors.length; i++) {
+            newWave = new Wave(matrix);
+            newWave.geometry = sectors[i].geometry;
+            result.push(newWave);
+        }
+
+        return result;
     },
 
     /**
      * получение секторов волны
      *
+     * @param {Point[]} geometry
      * @returns {Sector[]}
      */
-    getSectors: function () {
-        if (this.geometry.length == 0) {
+    splitGeometry: function (geometry) {
+        if (geometry.length == 0) {
             return [];
         }
 
         var sectors = [],
             currentSector = new Sector(),
-            point = this.geometry[0],
+            point = geometry[0],
             nextPoint,
             distance;
-        //console.log('---');
-        //console.log(this.geometry);
-        for (var i = 1; i < this.geometry.length; i++) {
-            nextPoint = this.geometry[i];
+
+        currentSector.addPoint(point);
+
+        for (var i = 1; i < geometry.length; i++) {
+            nextPoint = geometry[i];
             distance = point.getDistance(nextPoint);
-            //console.log(point, nextPoint, distance);
             if (distance == 1) {
                 currentSector.addPoint(nextPoint);
             } else {
@@ -161,6 +169,7 @@ Wave.prototype = {
 
                 if (firstPoint && lastPoint && firstPoint.getDistance(lastPoint) == 1) {
                     currentSector.merge(firstSector);
+                    console.log('merge');
                 } else {
                     sectors.push(currentSector);
                 }

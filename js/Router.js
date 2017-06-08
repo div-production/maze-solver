@@ -1,21 +1,23 @@
 /**
- * @param parent
  * @constructor
  */
-function Router(parent) {
+function Router() {
     this.path = [];
+    this.waves = [];
 }
 
 Router.prototype = {
     /**
-     * @type {Wave}
+     * @type {Wave[]}
      */
-    wave: null,
+    waves: [],
 
     /**
      * @type {Array}
      */
     path: [],
+
+    counter: 0,
 
     /**
      * установка края пути
@@ -23,22 +25,31 @@ Router.prototype = {
      * @param {Wave} wave
      */
     setWave: function (wave) {
-        this.wave = wave;
+        this.waves.push(wave);
     },
 
     /**
      * продвижение края пути на одну единицу
      */
     step: function () {
-        if (!this.wave) {
+        if (!this.waves.length) {
             return;
         }
 
-        var newWaves = this.wave.propagate();
-        this.wave = newWaves[0];
+        var newWaves = [];
 
         window.ctx.fillStyle = 'rgba(255,255,0,1)';
-        for (var i = 0; i < this.wave.geometry.length; i++) {
+        for (var i = 0; i < this.waves.length; i++) {
+            newWaves = newWaves.concat(this.waves[i].propagate());
+            for (j = 0; j < this.waves[i].geometry.length; j++) {
+                var point = this.waves[i].geometry[j];
+                window.ctx.fillRect(point.x, point.y, 1, 1);
+            }
+        }
+        this.waves = newWaves;
+
+        /*window.ctx.fillStyle = 'rgba(255,255,0,1)';
+        for (i = 0; i < this.wave.geometry.length; i++) {
             var point = this.wave.geometry[i];
             window.ctx.fillRect(point.x, point.y, 1, 1);
         }
@@ -52,7 +63,7 @@ Router.prototype = {
                 window.ctx.fillRect(center.x, center.y, 1, 1);
             }
 
-        }
+        }*/
     }
 };
 

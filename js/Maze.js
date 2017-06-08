@@ -84,15 +84,15 @@ Maze.prototype = {
         wave.geometry = [start];
         route.setWave(wave);
 
-        /*for (var i = 0; i < 100; i++) {
+        /*for (var i = 0; i < 100000; i++) {
             route.step();
         }*/
         /*setInterval(function () {
             route.step();
         }, 50);*/
-        window.addEventListener('click', function () {
+        /*window.addEventListener('click', function () {
             route.step();
-        });
+        });*/
     }
 };
 
