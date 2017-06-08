@@ -1,4 +1,4 @@
-var Route = require('Route'),
+var Router = require('Router'),
     Wave = require('Wave'),
     Matrix = require('Matrix');
 
@@ -78,7 +78,7 @@ Maze.prototype = {
     solve: function (start) {
         this.startPoint = start;
 
-        var route = new Route(),
+        var route = new Router(),
             wave = new Wave(this.matrix);
 
         wave.geometry = [start];
@@ -90,9 +90,9 @@ Maze.prototype = {
         /*setInterval(function () {
             route.step();
         }, 50);*/
-        /*window.addEventListener('click', function () {
+        window.addEventListener('click', function () {
             route.step();
-        });*/
+        });
     }
 };
 

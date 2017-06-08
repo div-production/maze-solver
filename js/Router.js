@@ -2,11 +2,11 @@
  * @param parent
  * @constructor
  */
-function Route(parent) {
+function Router(parent) {
     this.path = [];
 }
 
-Route.prototype = {
+Router.prototype = {
     /**
      * @type {Wave}
      */
@@ -56,4 +56,4 @@ Route.prototype = {
     }
 };
 
-module.exports = Route;
+module.exports = Router;
