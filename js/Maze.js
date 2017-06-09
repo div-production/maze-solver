@@ -48,7 +48,14 @@ Maze.prototype = {
             row,
             width = imageData.width,
             pixel,
-            pixelNum;
+            pixelNum,
+            diff = 0;
+
+        var rowId = 0 , colId = 0;
+
+        var color = this.getAverageColor(imageData.data);
+
+        //this.ctx.fillStyle = 'rgba(255,255,0,0.5)';
 
         for (var i = 0; i < data.length; i += 4) {
             pixel = {
@@ -60,13 +67,17 @@ Maze.prototype = {
 
             if (pixelNum % width == 0) {
                 row = [];
-                result.push(row);
+                rowId = result.push(row);
             }
 
-            if (Math.min(pixel.r, pixel.g, pixel.b) > 50) {
-                row.push(0);
+            diff = Math.abs(pixel.r - color.r) + Math.abs(pixel.g - color.g) + Math.abs(pixel.b - color.b);
+
+            if (diff < 45) {
+                colId = row.push(0);
+
             } else {
-                row.push(1);
+                colId = row.push(1);
+                //this.ctx.fillRect(colId, rowId, 1, 1);
             }
         }
 
@@ -83,6 +94,11 @@ Maze.prototype = {
     solve: function (start) {
         this.startPoint = start;
 
+        ctx.beginPath();
+        ctx.arc(start.x, start.y, 5, 0, 2 * Math.PI, false);
+        ctx.fillStyle = 'green';
+        ctx.fill();
+
         var route = new Router(),
             wave = new Wave(this.matrix),
             winner;
@@ -93,7 +109,7 @@ Maze.prototype = {
 
         route.setWave(wave);
 
-        for (var i = 0; i < 100000; i++) {
+        for (var i = 0; i < this.matrix.getLength(); i++) {
             winner = route.step();
             if (winner) {
                 var points = winner.path.getPoints();
@@ -113,12 +129,37 @@ Maze.prototype = {
     drawPath: function (points) {
         ctx.beginPath();
         ctx.strokeStyle = 'red';
+        ctx.lineWidth = 2;
         for (var i = 0; i < points.length; i++) {
             var point = points[i];
             ctx.lineTo(point.x, point.y);
             //window.ctx.fillRect(point.x, point.y, 1, 1);
         }
         ctx.stroke();
+    },
+
+    getAverageColor: function (data) {
+        var color = {
+            r: 0,
+            g: 0,
+            b: 0
+        };
+        var count = 0;
+        for (var i = 0; i < data.length; i += 4) {
+            count++;
+
+            color.r += data[i];
+            color.g += data[i + 1];
+            color.b += data[i + 2];
+
+            pixelNum = i / 4;
+        }
+
+        color.r /= count;
+        color.g /= count;
+        color.b /= count;
+
+        return color;
     }
 };
 
