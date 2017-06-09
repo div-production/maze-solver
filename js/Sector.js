@@ -9,21 +9,6 @@ Sector.prototype = {
     geometry: [],
 
     /**
-     * получение центральной точки сектора
-     *
-     * @returns {Point}
-     */
-    getCenter: function () {
-        var length = this.geometry.length;
-        if (!length) {
-            return null;
-        }
-
-        var centerKey = Math.floor(length / 2);
-        return this.geometry[centerKey];
-    },
-
-    /**
      * добавление точки к сектору
      *
      * @param {Point} point

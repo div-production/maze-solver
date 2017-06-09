@@ -19,6 +19,11 @@ Router.prototype = {
      */
     path: [],
 
+    /**
+     * счётчик, отвечает за сохранение точек в массив пути
+     *
+     * @type {number}
+     */
     counter: 0,
 
     /**
@@ -31,7 +36,10 @@ Router.prototype = {
     },
 
     /**
-     * продвижение края пути на одну единицу
+     * продвижение края всех волн на одну единицу
+     * возвращает объект волны, если выход найден
+     *
+     * @returns {Wave|null}
      */
     step: function () {
         if (!this.waves.length) {
@@ -56,11 +64,6 @@ Router.prototype = {
                 }
             }
             newWaves = newWaves.concat(childWaves);
-            for (j = 0; j < wave.geometry.length; j++) {
-                var point = wave.geometry[j];
-
-                //window.ctx.fillRect(point.x, point.y, 1, 1);
-            }
 
             if (this.counter % 10 == 0) {
                 wave.savePathPoint();
@@ -69,23 +72,6 @@ Router.prototype = {
         this.waves = newWaves;
 
         this.counter++;
-
-        /*window.ctx.fillStyle = 'rgba(255,255,0,1)';
-        for (i = 0; i < this.wave.geometry.length; i++) {
-            var point = this.wave.geometry[i];
-            window.ctx.fillRect(point.x, point.y, 1, 1);
-        }
-
-        window.ctx.fillStyle = 'rgba(255,0,0,1)';
-        var sectors = this.wave.getSectors();
-        console.log(sectors.length);
-        for (i = 0; i < sectors.length; i++) {
-            var center = sectors[i].getCenter();
-            if (center) {
-                window.ctx.fillRect(center.x, center.y, 1, 1);
-            }
-
-        }*/
     }
 };
 

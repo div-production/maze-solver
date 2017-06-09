@@ -26,6 +26,9 @@ Wave.prototype = {
      */
     parent: null,
 
+    /**
+     * @type {Path}
+     */
     path: null,
 
     /**
@@ -135,7 +138,7 @@ Wave.prototype = {
     },
 
     /**
-     * получение секторов волны
+     * поиск секторов в волне (если произошло деление)
      *
      * @param {Point[]} geometry
      * @returns {Sector[]}
@@ -184,6 +187,11 @@ Wave.prototype = {
         return sectors;
     },
 
+    /**
+     * получение центра волны
+     *
+     * @returns {Point|null}
+     */
     getCenter: function () {
         var length = this.geometry.length;
         if (!length) {
@@ -194,6 +202,12 @@ Wave.prototype = {
         return this.geometry[centerKey];
     },
 
+    /**
+     * создание дочерней волны
+     *
+     * @param {Point[]} geometry
+     * @returns {Wave}
+     */
     create: function (geometry) {
         var wave = new Wave(this.matrix);
         wave.geometry = geometry;
@@ -201,6 +215,9 @@ Wave.prototype = {
         return wave;
     },
 
+    /**
+     * сохранение центра текущеё волны в массив точек пути
+     */
     savePathPoint: function () {
         var center = this.getCenter();
         this.path.addPoint(center);

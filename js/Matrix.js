@@ -44,19 +44,6 @@ Matrix.prototype = {
     },
 
     /**
-     * установка значения элемента матрицы
-     *
-     * @param x
-     * @param y
-     * @param value
-     */
-    setItem: function (x, y, value) {
-        if (this.data[y] && this.data[y][x] !== undefined) {
-            this.data[y][x] = value;
-        }
-    },
-
-    /**
      * установка значения элемента матрицы по координатам переданной точки
      *
      * @param {Point} point

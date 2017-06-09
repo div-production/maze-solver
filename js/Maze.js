@@ -11,7 +11,6 @@ function Maze(canvas) {
     this.ctx = canvas.getContext('2d');
     var imageData = this.ctx.getImageData(0, 0, canvas.width, canvas.height);
     this.matrix = this._createMatrix(imageData);
-    window.ctx = this.ctx;
 }
 
 Maze.prototype = {
@@ -29,11 +28,6 @@ Maze.prototype = {
      * @type {Matrix}
      */
     matrix: null,
-
-    /**
-     * @type {Point}
-     */
-    startPoint: null,
 
     /**
      * создние матрицы из данных изображения
@@ -55,8 +49,6 @@ Maze.prototype = {
 
         var color = this.getAverageColor(imageData.data);
 
-        //this.ctx.fillStyle = 'rgba(255,255,0,0.5)';
-
         for (var i = 0; i < data.length; i += 4) {
             pixel = {
                 r: data[i],
@@ -72,12 +64,11 @@ Maze.prototype = {
 
             diff = Math.abs(pixel.r - color.r) + Math.abs(pixel.g - color.g) + Math.abs(pixel.b - color.b);
 
-            if (diff < 45) {
+            if (diff < 90) {
                 colId = row.push(0);
 
             } else {
                 colId = row.push(1);
-                //this.ctx.fillRect(colId, rowId, 1, 1);
             }
         }
 
@@ -89,19 +80,19 @@ Maze.prototype = {
     },
 
     /**
+     * нахождение выхода из лабиринта
+     *
      * @param {Point} start
      */
     solve: function (start) {
-        this.startPoint = start;
-
-        ctx.beginPath();
-        ctx.arc(start.x, start.y, 5, 0, 2 * Math.PI, false);
-        ctx.fillStyle = 'green';
-        ctx.fill();
-
         var route = new Router(),
             wave = new Wave(this.matrix),
             winner;
+
+        this.ctx.beginPath();
+        this.ctx.arc(start.x, start.y, 5, 0, 2 * Math.PI, false);
+        this.ctx.fillStyle = 'green';
+        this.ctx.fill();
 
         wave.geometry = [start];
         wave.path = new Path();
@@ -117,42 +108,46 @@ Maze.prototype = {
                 break;
             }
         }
-        /*setInterval(function () {
-            route.step();
-        }, 50);*/
-        /*window.addEventListener('click', function () {
-            route.step();
-        });*/
     },
 
-
+    /**
+     * отрисовка пути по точкам
+     *
+     * @param {Point[]} points
+     */
     drawPath: function (points) {
-        ctx.beginPath();
-        ctx.strokeStyle = 'red';
-        ctx.lineWidth = 2;
+        var point;
+
+        this.ctx.beginPath();
+        this.ctx.strokeStyle = 'red';
+        this.ctx.lineWidth = 2;
         for (var i = 0; i < points.length; i++) {
-            var point = points[i];
-            ctx.lineTo(point.x, point.y);
-            //window.ctx.fillRect(point.x, point.y, 1, 1);
+            point = points[i];
+            this.ctx.lineTo(point.x, point.y);
         }
-        ctx.stroke();
+        this.ctx.stroke();
     },
 
+    /**
+     * получение усреднённого цвета для картинки
+     *
+     * @param {Uint8ClampedArray} data
+     * @returns {{r: number, g: number, b: number}}
+     */
     getAverageColor: function (data) {
         var color = {
             r: 0,
             g: 0,
             b: 0
-        };
-        var count = 0;
+        },
+            count = 0;
+
         for (var i = 0; i < data.length; i += 4) {
             count++;
 
             color.r += data[i];
             color.g += data[i + 1];
             color.b += data[i + 2];
-
-            pixelNum = i / 4;
         }
 
         color.r /= count;
