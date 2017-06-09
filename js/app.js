@@ -10,13 +10,13 @@ window.addEventListener('DOMContentLoaded', function () {
         width,
         height;
 
-    window.addEventListener('click' ,function (e) {
+    window.addEventListener('click', function (e) {
         start.x = e.clientX;
         start.y = e.clientY;
     });
 
     video.addEventListener('play', function () {
-        width = canvas.width= window.innerWidth;
+        width = canvas.width = window.innerWidth;
         height = canvas.height = window.innerHeight;
         draw();
     }, false);
@@ -41,5 +41,3 @@ window.addEventListener('DOMContentLoaded', function () {
         setTimeout(draw, 20);
     }
 }, false);
-
-

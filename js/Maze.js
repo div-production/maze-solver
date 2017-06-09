@@ -45,7 +45,7 @@ Maze.prototype = {
             pixelNum,
             diff = 0;
 
-        var rowId = 0 , colId = 0;
+        var rowId = 0, colId = 0;
 
         var color = this.getAverageColor(imageData.data);
 
@@ -136,10 +136,10 @@ Maze.prototype = {
      */
     getAverageColor: function (data) {
         var color = {
-            r: 0,
-            g: 0,
-            b: 0
-        },
+                r: 0,
+                g: 0,
+                b: 0
+            },
             count = 0;
 
         for (var i = 0; i < data.length; i += 4) {

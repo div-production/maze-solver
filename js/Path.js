@@ -2,7 +2,7 @@
  * @param {Path} parent
  * @constructor
  */
-function Path (parent) {
+function Path(parent) {
     this.parent = parent;
     this.points = [];
 }
