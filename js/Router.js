@@ -4,7 +4,6 @@ var Path = require('Path');
  * @constructor
  */
 function Router() {
-    this.path = new Path();
     this.waves = [];
 }
 
@@ -13,11 +12,6 @@ Router.prototype = {
      * @type {Wave[]}
      */
     waves: [],
-
-    /**
-     * @type {Array}
-     */
-    path: [],
 
     /**
      * счётчик, отвечает за сохранение точек в массив пути

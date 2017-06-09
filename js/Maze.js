@@ -43,11 +43,8 @@ Maze.prototype = {
             width = imageData.width,
             pixel,
             pixelNum,
-            diff = 0;
-
-        var rowId = 0, colId = 0;
-
-        var color = this.getAverageColor(imageData.data);
+            diff = 0,
+            avgColor = this.getAverageColor(imageData.data);
 
         for (var i = 0; i < data.length; i += 4) {
             pixel = {
@@ -59,16 +56,16 @@ Maze.prototype = {
 
             if (pixelNum % width == 0) {
                 row = [];
-                rowId = result.push(row);
+                result.push(row);
             }
 
-            diff = Math.abs(pixel.r - color.r) + Math.abs(pixel.g - color.g) + Math.abs(pixel.b - color.b);
+            diff = Math.abs(pixel.r - avgColor.r) + Math.abs(pixel.g - avgColor.g) + Math.abs(pixel.b - avgColor.b);
 
-            if (diff < 90) {
-                colId = row.push(0);
+            if (diff < 80) {
+                row.push(0);
 
             } else {
-                colId = row.push(1);
+                row.push(1);
             }
         }
 
@@ -89,10 +86,7 @@ Maze.prototype = {
             wave = new Wave(this.matrix),
             winner;
 
-        this.ctx.beginPath();
-        this.ctx.arc(start.x, start.y, 5, 0, 2 * Math.PI, false);
-        this.ctx.fillStyle = 'green';
-        this.ctx.fill();
+        this.drawStart(start);
 
         wave.geometry = [start];
         wave.path = new Path();
@@ -126,6 +120,18 @@ Maze.prototype = {
             this.ctx.lineTo(point.x, point.y);
         }
         this.ctx.stroke();
+    },
+
+    /**
+     * отрисовка начальной точки
+     *
+     * @param {Point} point
+     */
+    drawStart: function (point) {
+        this.ctx.beginPath();
+        this.ctx.arc(point.x, point.y, 5, 0, 2 * Math.PI, false);
+        this.ctx.fillStyle = 'green';
+        this.ctx.fill();
     },
 
     /**
